@@ -23,7 +23,7 @@ in java
 	TextSwitcherView textSwitcherView = (TextSwitcherView) findViewById(R.id.textSwitcherView);
 	textSwitcherView.setCurrentText("123 likes"); // init
 
-	textSwitcherView.setCurrentText("aim text"); 
+	textSwitcherView.setText("aim text"); 
 
 ### TimeDownView
 
