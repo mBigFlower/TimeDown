@@ -1,15 +1,19 @@
 package com.flowerfat.timecount;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 /**
- * Created by 明明大美女 on 2016/1/21.
+ * Created by bigflower on 2016/1/21.
+ *
  */
 public class TimeDownMinute extends LinearLayout {
 
@@ -20,6 +24,8 @@ public class TimeDownMinute extends LinearLayout {
 
     private int minuteCount, secondCount;
     private CharSequence timeOverStr;
+    private int textColor = Color.BLACK;
+    private int textSize = 16;
 
     public TimeDownMinute(Context context) {
         super(context);
@@ -28,6 +34,16 @@ public class TimeDownMinute extends LinearLayout {
 
     public TimeDownMinute(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs, R.styleable.TimeDown, 0, 0);
+        try {
+            textColor = a.getColor(R.styleable.TimeDown_switcherColor, Color.BLACK);
+            textSize = a.getDimensionPixelSize(R.styleable.TimeDown_switcherSize, 16);
+        } finally {
+            a.recycle();
+        }
+
         initWidget(context);
     }
 
@@ -36,13 +52,35 @@ public class TimeDownMinute extends LinearLayout {
         super(context, attrs, defStyleAttr);
         initWidget(context);
     }
-
+    ///////////////////////////////////////////////
+    // init
+    ///////////////////////////////////////////////
     private void initWidget(Context context) {
         View v = LayoutInflater.from(context).inflate(R.layout.time_down_minute, this, true);
         timeDownMinute = (TextSwitcherView) v.findViewById(R.id.minuteTsv);
         timeDownSecond = (TextSwitcherView) v.findViewById(R.id.secondTsv);
+        initMinute();
+        initMidContent(v);
+        initSecond();
+    }
+    private void initMinute(){
+        timeDownMinute.setTextSize(textSize);
+        timeDownMinute.setTextColor(textColor);
+    }
+    private void initMidContent(View v){
+        TextView midTextView = (TextView) v.findViewById(R.id.midTv);
+        midTextView.setTextSize(textSize);
+        midTextView.setTextColor(textColor);
+    }
+    private void initSecond(){
+        timeDownSecond.setTextSize(textSize);
+        timeDownSecond.setTextColor(textColor);
     }
 
+
+    ///////////////////////////////////////////////
+    // outside use
+    ///////////////////////////////////////////////
     public TimeDownMinute init(long millisInFuture) {
         return init(millisInFuture, "0");
     }
@@ -65,7 +103,7 @@ public class TimeDownMinute extends LinearLayout {
     }
 
     ///////////////////////////////////////////////
-    // 倒计时
+    //
     ///////////////////////////////////////////////
 
     class TimeCount extends CountDownTimer {

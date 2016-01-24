@@ -12,6 +12,8 @@ public class TimeDownView extends TextSwitcherView {
 
     private OnTimeDownListener mInterface;
 
+    private boolean isStart;
+
     private TimeCount timeCount;
     private CharSequence timeOverStr;
 
@@ -35,16 +37,25 @@ public class TimeDownView extends TextSwitcherView {
     }
 
     public void start() {
-        timeCount.start();
+        if (isStart) {
+            timeCount.cancel();
+            timeCount.start();
+        } else {
+            isStart = true ;
+            timeCount.start();
+        }
     }
 
     public void cancel() {
         timeCount.cancel();
     }
 
+    public boolean isStart() {
+        return isStart;
+    }
 
     ///////////////////////////////////////////////
-    // 倒计时
+    //
     ///////////////////////////////////////////////
 
     class TimeCount extends CountDownTimer {
@@ -55,6 +66,7 @@ public class TimeDownView extends TextSwitcherView {
 
         @Override
         public void onFinish() {
+            isStart = false;
             setText(timeOverStr);
             if (mInterface != null) {
                 mInterface.onFinish();
@@ -75,7 +87,7 @@ public class TimeDownView extends TextSwitcherView {
     }
 
     ///////////////////////////////////////////////
-    // 接口
+    // interface
     ///////////////////////////////////////////////
     public TimeDownView setOnTimeDownListener(OnTimeDownListener listener) {
         this.mInterface = listener;

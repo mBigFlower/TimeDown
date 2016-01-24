@@ -1,6 +1,8 @@
 package com.flowerfat.timecount;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TextSwitcher;
@@ -8,15 +10,20 @@ import android.widget.TextView;
 
 /**
  * Created by MingMing_is_a_beautiful_girl on 2016/1/21.
- *
  * the plus for TextSwitcher, you can use it easily
  * implement the it's ViewFactory instead of add two TextView when we use the TextSwitcher
- *
- * TODO user-define the textview child's textSize and textColor
  */
-public class TextSwitcherView extends TextSwitcher implements TextSwitcher.ViewFactory{
+public class TextSwitcherView extends TextSwitcher implements TextSwitcher.ViewFactory {
 
     private CharSequence text;
+    private int textColor = Color.BLACK;
+    private int textSize = 16;
+
+    public TextSwitcherView(Context context, int textColor, int textSize) {
+        super(context);
+        this.textColor = textColor;
+        this.textSize = textSize;
+    }
 
     public TextSwitcherView(Context context) {
         super(context);
@@ -25,21 +32,24 @@ public class TextSwitcherView extends TextSwitcher implements TextSwitcher.ViewF
 
     public TextSwitcherView(Context context, AttributeSet attrs) {
         super(context, attrs);
+
+        TypedArray a = context.getTheme().obtainStyledAttributes(
+                attrs, R.styleable.TimeDown, 0, 0);
+        try {
+            textColor = a.getColor(R.styleable.TimeDown_switcherColor, Color.BLACK);
+            textSize = a.getDimensionPixelSize(R.styleable.TimeDown_switcherSize, 16);
+        } finally {
+            a.recycle();
+        }
+
         init();
     }
 
     private void init() {
-//        initLayout();
         initAnim();
         setFactory(this);
     }
 
-    private void initLayout() {
-        TextView textView = new TextView(getContext());
-        this.addView(textView);
-        textView = new TextView(getContext());
-        this.addView(textView);
-    }
 
     private void initAnim() {
         this.setInAnimation(getContext(), R.anim.slide_in_counter);
@@ -58,12 +68,25 @@ public class TextSwitcherView extends TextSwitcher implements TextSwitcher.ViewF
         this.text = text;
     }
 
-    public CharSequence getText(){
-        return text ;
+    public CharSequence getText() {
+        return text;
+    }
+
+    public void setTextSize(int textSize) {
+        ((TextView)getChildAt(0)).setTextSize(textSize);
+        ((TextView)getChildAt(1)).setTextSize(textSize);
+    }
+
+    public void setTextColor(int textColor) {
+        ((TextView)getChildAt(0)).setTextColor(textColor);
+        ((TextView)getChildAt(1)).setTextColor(textColor);
     }
 
     @Override
     public View makeView() {
-        return new TextView(getContext());
+        TextView textView = new TextView(getContext());
+        textView.setTextColor(textColor);
+        textView.setTextSize(textSize);
+        return textView;
     }
 }

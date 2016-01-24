@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initTimeDownMinute() {
-        timeDownMinute.init(360 * 1000);
+        timeDownMinute.init(321 * 1000);
     }
 
 
